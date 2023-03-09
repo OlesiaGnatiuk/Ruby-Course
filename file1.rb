@@ -1,6 +1,7 @@
+
 def add (a, b)
-  a + b
+  puts a + b
 end
 
-puts add 5,9
-
+puts add 6,9
+hello
