@@ -1,8 +1,5 @@
 require 'selenium-webdriver'
 require 'capybara/rspec'
-require 'faker'
-
-
 
 RSpec.configure do |config|
   def options
