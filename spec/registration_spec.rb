@@ -1,30 +1,31 @@
 feature 'Registration', js: true do
-
-  let!(:timestamp) {Time.now.to_i.to_s}
-  let!(:email) {"test" + timestamp + "@gmail.com"}
-  let!(:user_name) {"test" + timestamp}
-
   scenario 'User can register now' do
 
+  user_name = "test#{Time.now.to_i.to_s}"
+  email = "#{user_name}@example.com"
 
-    visit('https://gitlab.testautomate.me/')
-    find(:xpath, '//*[@id="signin-container"]/p/a').click
-    find('#new_user_first_name').set 'test123g45'
-    find('#new_user_last_name').set 'test12345'
-    find('#new_user_username').set user_name
-    find('#new_user_email').set email
-    find('#new_user_password').set 'test7123456'
-    find('.btn.gl-button.gl-w-full').click
+  @register_page = RegistrationPage.new
+  @register_page.load
 
-    select('Development Team Lead', from: "Role")
-    select('A different reason', from: "I'm signing up for GitLab because:")
+  @register_page.first_name.set 'Test'
+  @register_page.last_name.set 'User'
+  @register_page.user_name.set user_name
 
-    find('.gl-button.w-100').click
+  expect(page).to have_selector '.validation-success.field-validation'
 
+  @register_page.email.set email
+  @register_page.password.set 'test123456'
+  @register_page.registration_button.click
 
-    expect(page).to have_content ('Welcome to GitLab')
+  select('Development Team Lead', from: "Role")
+  select('A different reason', from: "I'm signing up for GitLab because:")
+  find(:xpath, '//*[@id="jobs_to_be_done_other"]').set 'Reason'  if find(:xpath, '//*[@id="jobs_to_be_done_other"]').visible?
 
-     sleep 5
+  @register_page.get_started_button.click
+
+  expect(page).to have_content 'Welcome to GitLab'
+
+  sleep 3
 
     end
 end
